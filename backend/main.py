@@ -93,9 +93,6 @@ def create_app(repository=None):
         if not db.delete(card_id): raise HTTPException(status_code=404,detail='Card not found. It may have been deleted by another visitor.')
         return Response(status_code=204)
     static_dir=Path(__file__).resolve().parent.parent/'public'
-    @app.get('/',include_in_schema=False)
-    def frontend():
-        if (static_dir/'index.html').exists(): return FileResponse(static_dir/'index.html')
-        return {'app':'Natthaphong Kanban','docs':'/docs'}
+    app.frontend('/',directory=str(static_dir),check_dir=False)
     return app
 app=create_app()
