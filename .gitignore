@@ -11,6 +11,7 @@ __pycache__/
 .vercel/
 .wrangler/
 frontend/dist/
-public/
+/public/
 *.db
 *.sqlite*
+*.tsbuildinfo

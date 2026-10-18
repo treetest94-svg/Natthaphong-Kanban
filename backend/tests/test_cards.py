@@ -90,3 +90,30 @@ def test_health_and_security_headers(client):
 def test_empty_update_rejected(client):
     card = client.post('/api/cards',json={'title':'No blank patch'}).json()
     assert client.patch(f"/api/cards/{card['id']}",json={}).status_code == 422
+
+class PrivateTestRepository:
+    def __init__(self): self.boards={}
+    def for_board(self,token): return self.boards.setdefault(token,TestRepository())
+
+def test_private_browser_boards_are_isolated():
+    app=create_app(PrivateTestRepository())
+    with TestClient(app) as alice, TestClient(app) as bob:
+        added=alice.post('/api/cards',json={'title':'Private card'}).json()
+        assert bob.get('/api/cards').json()==[]
+        assert bob.patch(f"/api/cards/{added['id']}",json={'status':'done'}).status_code==404
+        assert bob.delete(f"/api/cards/{added['id']}").status_code==404
+        assert alice.get('/api/cards').json()[0]['title']=='Private card'
+        assert alice.get('/api/cards').json()[0]['status']=='todo'
+
+def test_board_cookie_is_httponly_and_stable(client):
+    first=client.get('/api/cards')
+    cookie=client.cookies.get('kanban_board')
+    assert len(cookie)==64
+    assert 'HttpOnly' in first.headers['set-cookie']
+    assert 'SameSite=lax' in first.headers['set-cookie']
+    client.get('/api/cards')
+    assert client.cookies.get('kanban_board')==cookie
+
+def test_cross_origin_writes_rejected(client):
+    response=client.post('/api/cards',json={'title':'No cross-site changes'},headers={'Origin':'https://untrusted.example'})
+    assert response.status_code==403
