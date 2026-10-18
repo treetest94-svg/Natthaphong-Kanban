@@ -5,7 +5,7 @@ A full-stack Kanban board for the CU FDE2 assignment. Three columns: **To do**, 
 ## Submission
 
 - Public source: https://github.com/treetest94-svg/Natthaphong-Kanban
-- Public frontend: deployment in progress.
+- Public frontend: https://natthaphong-kanban.vercel.app/
 
 ## Stack and request flow
 
@@ -78,3 +78,15 @@ Work is developed on `feature/kanban-board`, then merged into `main`. The course
 Import the repository root into Vercel, select FastAPI (set by `vercel.json`), and configure `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` privately. The build command runs the frontend build. The frontend uses same-origin `/api`, so it never points at localhost in production. For separate frontend/backend hosting, set `VITE_API_URL` and `ALLOWED_ORIGINS` to the actual deployed URLs.
 
 `.env`, private configuration, dependencies, generated assets and cookies are excluded from Git. The repository contains only example placeholders. The public source is published with the connected GitHub API rather than an authenticated local gh CLI.
+
+
+## Verified delivery
+
+- 22 backend acceptance/regression tests passed.
+- React/TypeScript production build passed.
+- Real Supabase integration checks passed for CRUD, status validation and separate-board isolation.
+- Public production API returned health 200, create 201, list/update 200, delete 204, invalid title 422 and cross-board update/delete 404.
+- Live browser checks passed: create, move with the dropdown, drag from Doing to Done, refresh and retain the saved state, then delete the test card.
+- Source scan confirmed the deployed configuration key is absent from tracked files. Real `.env` files and board capabilities are not committed.
+
+Deployment fix: the original Python build did not serve the generated Vite files. The deployment entry point now registers `frontend/dist` with `app.frontend`, and `vercel.json` explicitly includes those generated assets. This was tested locally and on the public URL. Both frontend and API use the same origin.
