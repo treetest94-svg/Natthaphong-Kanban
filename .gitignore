@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+!.env.production.example
+.dev.vars
+.venv/
+node_modules/
+__pycache__/
+.pytest_cache/
+*.pyc
+.vercel/
+.wrangler/
+frontend/dist/
+public/
+*.db
+*.sqlite*
