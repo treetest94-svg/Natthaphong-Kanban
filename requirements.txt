@@ -1,0 +1,4 @@
+fastapi==0.144.0
+supabase==2.33.0
+python-dotenv==1.2.4
+httpx[socks]==0.28.1

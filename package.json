@@ -1,0 +1,1 @@
+{"name":"natthaphong-kanban","version":"1.0.0","private":true,"scripts":{"build":"npm --prefix frontend ci && npm --prefix frontend run build && node scripts/copy-frontend.mjs","test:backend":"cd backend && uv run pytest -q"},"engines":{"node":">=24"}}
