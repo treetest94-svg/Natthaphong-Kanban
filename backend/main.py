@@ -92,7 +92,5 @@ def create_app(repository=None):
         if card_id<1: raise HTTPException(status_code=422,detail='Card ID must be a positive integer.')
         if not db.delete(card_id): raise HTTPException(status_code=404,detail='Card not found. It may have been deleted by another visitor.')
         return Response(status_code=204)
-    static_dir=Path(__file__).resolve().parent.parent/'public'
-    app.frontend('/',directory=str(static_dir),check_dir=False)
     return app
 app=create_app()
